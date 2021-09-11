@@ -1,8 +1,8 @@
 github.com/darkwyrm/b85 v0.0.0-20201016104639-0bcaa1e55b1b/go.mod h1:Y+dLEpDDyKToPP4ZGSmNFd0iQO9L8pnxn8xqCmA21gc=
 github.com/darkwyrm/b85 v0.0.0-20210908110113-bdd55eedeb3c h1:YLArciECh1asvnttuaj3fw/pwIu4LdAqsfQ2mQ93+zE=
 github.com/darkwyrm/b85 v0.0.0-20210908110113-bdd55eedeb3c/go.mod h1:Y+dLEpDDyKToPP4ZGSmNFd0iQO9L8pnxn8xqCmA21gc=
-github.com/darkwyrm/cryptostring v0.0.0-20210907235210-f334a2a70c16 h1:P8kO48k7lsxnfWIL9ISMJ1ONF43RuePfylP7DPSiWfE=
-github.com/darkwyrm/cryptostring v0.0.0-20210907235210-f334a2a70c16/go.mod h1:CR02sDyd7w47h5tlIC7Pl/k3qQBZXmkDJRaBv0fBzb8=
+github.com/darkwyrm/cryptostring v0.0.0-20210908111847-cba4a3663c0a h1:oMQrrCV44nB9G0NdhMLwnMWxthFOUFR68oXHSIPbDpY=
+github.com/darkwyrm/cryptostring v0.0.0-20210908111847-cba4a3663c0a/go.mod h1:CR02sDyd7w47h5tlIC7Pl/k3qQBZXmkDJRaBv0fBzb8=
 golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 h1:HWj/xjIHfjYU5nVXpTM0s39J9CbLn7Cc5a7IC5rwsMQ=
 golang.org/x/crypto v0.0.0-20210817164053-32db794688a5/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=
 golang.org/x/net v0.0.0-20210226172049-e18ecbb05110/go.mod h1:m0MpNAwzfU5UDzcl9v0D8zg8gWTRqZa9RBIspLL5mdg=
