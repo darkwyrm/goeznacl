@@ -24,6 +24,14 @@ import (
 
 var ErrUnsupportedAlgorithm = errors.New("unsupported algorithm")
 
+type EncryptorKey interface {
+	Encrypt(data []byte) ([]byte, error)
+}
+
+type DecryptorKey interface {
+	Decrypt(data []byte) ([]byte, error)
+}
+
 // CryptoKey is a baseline interface to the different kinds of keys defined in this module
 type CryptoKey interface {
 	GetEncryptionType() string
