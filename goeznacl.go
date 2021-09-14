@@ -25,11 +25,11 @@ import (
 var ErrUnsupportedAlgorithm = errors.New("unsupported algorithm")
 
 type EncryptorKey interface {
-	Encrypt(data []byte) ([]byte, error)
+	Encrypt(data []byte) (string, error)
 }
 
 type DecryptorKey interface {
-	Decrypt(data []byte) ([]byte, error)
+	Decrypt(data string) ([]byte, error)
 }
 
 // CryptoKey is a baseline interface to the different kinds of keys defined in this module
@@ -592,8 +592,6 @@ func VerifyPasswordHash(password string, hashPass string) (bool, error) {
 
 // IsArgonHash checks to see if the string passed is an Argon2id password hash
 func IsArgonHash(hashstr string) (bool, error) {
-	// TODO: revisit and make more robust
-
 	if !strings.HasPrefix(hashstr, "$argon2id") {
 		return false, errors.New("bad prefix")
 	}
