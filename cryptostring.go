@@ -28,7 +28,7 @@ import (
 
 var ErrBadAlgorithm = errors.New("unsupported algorithm")
 
-var reFormatPattern = regexp.MustCompile("^[A-Z0-9-]{1,24}:")
+var reFormatPattern = regexp.MustCompile("^[A-Z0-9-]{1,24}")
 
 type CryptoString struct {
 	Prefix string
