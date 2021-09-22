@@ -26,9 +26,9 @@ import (
 //	- ED25519:6lXjej0C~!F&_`qnkPHrC`z8+>;#g*fNfjV@4ngGlp#xsr8}1rS2(NG
 //
 
-var ErrBadAlgorithm = errors.New("unsupported algorithm")
-
 var reFormatPattern = regexp.MustCompile("^[A-Z0-9-]{1,24}")
+
+var ErrInvalidCS = errors.New("invalid cryptostring")
 
 type CryptoString struct {
 	Prefix string
@@ -58,17 +58,17 @@ func (cs *CryptoString) Set(str string) error {
 	// Data checks
 
 	if !reFormatPattern.MatchString(str) {
-		return ErrBadAlgorithm
+		return ErrUnsupportedAlgorithm
 	}
 
 	parts := strings.SplitN(str, ":", 2)
 	if len(parts) != 2 || len(parts[1]) < 1 {
-		return errors.New("crypto data missing")
+		return ErrInvalidCS
 	}
 
 	_, err := b85.Decode(parts[1])
 	if err != nil {
-		return errors.New("base85 decoding error")
+		return b85.ErrDecodingB85
 	}
 
 	cs.Prefix = parts[0]
@@ -82,7 +82,7 @@ func (cs *CryptoString) SetFromBytes(algorithm string, buffer []byte) error {
 
 	if len(algorithm) > 0 {
 		if !reFormatPattern.MatchString(algorithm) {
-			return errors.New("bad algorithm given")
+			return ErrInvalidCS
 		}
 		cs.Prefix = algorithm
 	} else {
