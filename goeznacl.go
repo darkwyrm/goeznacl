@@ -10,7 +10,6 @@ import (
 	"strings"
 
 	"github.com/darkwyrm/b85"
-	cs "github.com/darkwyrm/cryptostring"
 	"golang.org/x/crypto/argon2"
 	"golang.org/x/crypto/blake2b"
 	"golang.org/x/crypto/nacl/box"
@@ -40,12 +39,12 @@ type CryptoKey interface {
 
 // VerificationKey is an object to represent just a verification key, not a key pair
 type VerificationKey struct {
-	PublicHash cs.CryptoString
-	key        cs.CryptoString
+	PublicHash CryptoString
+	key        CryptoString
 }
 
 // NewVerificationKey creates a new verification key from a CryptoString
-func NewVerificationKey(key cs.CryptoString) *VerificationKey {
+func NewVerificationKey(key CryptoString) *VerificationKey {
 	var newkey VerificationKey
 	if newkey.Set(key) != nil {
 		return nil
@@ -66,7 +65,7 @@ func (vkey VerificationKey) GetType() string {
 
 // Verify uses the internal verification key with the passed data and signature and returns true
 // if the signature has verified the data with that key.
-func (vkey VerificationKey) Verify(data []byte, signature cs.CryptoString) (bool, error) {
+func (vkey VerificationKey) Verify(data []byte, signature CryptoString) (bool, error) {
 	if !signature.IsValid() {
 		return false, errors.New("invalid signature")
 	}
@@ -90,7 +89,7 @@ func (vkey VerificationKey) Verify(data []byte, signature cs.CryptoString) (bool
 }
 
 // Set assigns a CryptoString value to the key
-func (vkey *VerificationKey) Set(key cs.CryptoString) error {
+func (vkey *VerificationKey) Set(key CryptoString) error {
 	if key.Prefix != "ED25519" {
 		return ErrUnsupportedAlgorithm
 	}
@@ -104,15 +103,15 @@ func (vkey *VerificationKey) Set(key cs.CryptoString) error {
 
 // SigningPair defines an asymmetric signing key pair
 type SigningPair struct {
-	PublicHash  cs.CryptoString
-	PrivateHash cs.CryptoString
-	PublicKey   cs.CryptoString
-	PrivateKey  cs.CryptoString
+	PublicHash  CryptoString
+	PrivateHash CryptoString
+	PublicKey   CryptoString
+	PrivateKey  CryptoString
 }
 
 // NewSigningPair creates a new SigningPair object from two CryptoString objects
-func NewSigningPair(pubkey cs.CryptoString,
-	privkey cs.CryptoString) *SigningPair {
+func NewSigningPair(pubkey CryptoString,
+	privkey CryptoString) *SigningPair {
 	var newpair SigningPair
 	if newpair.Set(pubkey, privkey) != nil {
 		return nil
@@ -132,8 +131,8 @@ func (spair SigningPair) GetType() string {
 }
 
 // Set assigns a pair of CryptoString values to the SigningPair
-func (spair *SigningPair) Set(pubkey cs.CryptoString,
-	privkey cs.CryptoString) error {
+func (spair *SigningPair) Set(pubkey CryptoString,
+	privkey CryptoString) error {
 
 	if pubkey.Prefix != "ED25519" || privkey.Prefix != "ED25519" {
 		return ErrUnsupportedAlgorithm
@@ -155,13 +154,13 @@ func (spair SigningPair) Generate() error {
 	if err != nil {
 		return err
 	}
-	return spair.Set(cs.NewFromBytes("ED25519", verkey[:]),
-		cs.NewFromBytes("ED25519", signkey.Seed()))
+	return spair.Set(NewCSFromBytes("ED25519", verkey[:]),
+		NewCSFromBytes("ED25519", signkey.Seed()))
 }
 
 // Sign cryptographically signs a byte slice.
-func (spair SigningPair) Sign(data []byte) (cs.CryptoString, error) {
-	var out cs.CryptoString
+func (spair SigningPair) Sign(data []byte) (CryptoString, error) {
+	var out CryptoString
 
 	signkeyDecoded := spair.PrivateKey.RawData()
 	if signkeyDecoded == nil {
@@ -180,7 +179,7 @@ func (spair SigningPair) Sign(data []byte) (cs.CryptoString, error) {
 
 // Verify uses the internal verification key with the passed data and signature and returns true
 // if the signature has verified the data with that key.
-func (spair SigningPair) Verify(data []byte, signature cs.CryptoString) (bool, error) {
+func (spair SigningPair) Verify(data []byte, signature CryptoString) (bool, error) {
 	if !signature.IsValid() {
 		return false, errors.New("invalid signature")
 	}
@@ -205,14 +204,14 @@ func (spair SigningPair) Verify(data []byte, signature cs.CryptoString) (bool, e
 
 // EncryptionPair defines an asymmetric encryption EncryptionPair
 type EncryptionPair struct {
-	PublicHash  cs.CryptoString
-	PrivateHash cs.CryptoString
-	PublicKey   cs.CryptoString
-	PrivateKey  cs.CryptoString
+	PublicHash  CryptoString
+	PrivateHash CryptoString
+	PublicKey   CryptoString
+	PrivateKey  CryptoString
 }
 
 // NewEncryptionPair creates a new EncryptionPair object from two CryptoString objects
-func NewEncryptionPair(pubkey cs.CryptoString, privkey cs.CryptoString) *EncryptionPair {
+func NewEncryptionPair(pubkey CryptoString, privkey CryptoString) *EncryptionPair {
 	var newpair EncryptionPair
 
 	// All parameter validation is handled in Set
@@ -234,8 +233,8 @@ func (kpair EncryptionPair) GetType() string {
 }
 
 // Set assigns a pair of CryptoString values to the EncryptionPair
-func (kpair *EncryptionPair) Set(pubkey cs.CryptoString,
-	privkey cs.CryptoString) error {
+func (kpair *EncryptionPair) Set(pubkey CryptoString,
+	privkey CryptoString) error {
 
 	if pubkey.Prefix != "CURVE25519" || privkey.Prefix != "CURVE25519" {
 		return ErrUnsupportedAlgorithm
@@ -258,8 +257,8 @@ func (kpair EncryptionPair) Generate() error {
 		return err
 	}
 
-	return kpair.Set(cs.NewFromBytes("CURVE25519", pubkey[:]),
-		cs.NewFromBytes("CURVE25519", privkey[:]))
+	return kpair.Set(NewCSFromBytes("CURVE25519", pubkey[:]),
+		NewCSFromBytes("CURVE25519", privkey[:]))
 }
 
 // Encrypt encrypts byte slice using the internal public key. It returns the resulting encrypted
@@ -327,12 +326,12 @@ func (kpair EncryptionPair) Decrypt(data string) ([]byte, error) {
 
 // EncryptionKey defines an asymmetric encryption EncryptionPair
 type EncryptionKey struct {
-	PublicHash cs.CryptoString
-	PublicKey  cs.CryptoString
+	PublicHash CryptoString
+	PublicKey  CryptoString
 }
 
 // NewEncryptionKey creates a new EncryptionKey object from a CryptoString of the public key
-func NewEncryptionKey(pubkey cs.CryptoString) *EncryptionKey {
+func NewEncryptionKey(pubkey CryptoString) *EncryptionKey {
 	var newkey EncryptionKey
 
 	// All parameter validation is handled in Set
@@ -354,7 +353,7 @@ func (ekey EncryptionKey) GetType() string {
 }
 
 // Set assigns a pair of CryptoString values to the EncryptionKey
-func (ekey *EncryptionKey) Set(pubkey cs.CryptoString) error {
+func (ekey *EncryptionKey) Set(pubkey CryptoString) error {
 
 	if pubkey.Prefix != "CURVE25519" {
 		return errors.New("unsupported encryption algorithm")
@@ -394,12 +393,12 @@ func (ekey EncryptionKey) Encrypt(data []byte) (string, error) {
 
 // SymmetricKey defines a symmetric encryption key
 type SymmetricKey struct {
-	Hash cs.CryptoString
-	Key  cs.CryptoString
+	Hash CryptoString
+	Key  CryptoString
 }
 
 // NewSymmetricKey creates a new NewSymmetricKey object from a CryptoString of the key
-func NewSymmetricKey(keyString cs.CryptoString) *SymmetricKey {
+func NewSymmetricKey(keyString CryptoString) *SymmetricKey {
 	var newkey SymmetricKey
 
 	// All parameter validation is handled in Set
@@ -417,7 +416,7 @@ func GenerateSymmetricKey() *SymmetricKey {
 	keyBytes := make([]byte, 32)
 	rand.Read(keyBytes)
 
-	var keyString cs.CryptoString
+	var keyString CryptoString
 	keyString.Prefix = "XSALSA20"
 	keyString.Data = b85.Encode(keyBytes)
 
@@ -440,7 +439,7 @@ func (key SymmetricKey) GetType() string {
 }
 
 // Set assigns a pair of CryptoString values to the SymmetricKey
-func (key *SymmetricKey) Set(keyString cs.CryptoString) error {
+func (key *SymmetricKey) Set(keyString CryptoString) error {
 
 	if keyString.Prefix != "XSALSA20" {
 		return errors.New("unsupported encryption algorithm")
