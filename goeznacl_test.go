@@ -46,21 +46,21 @@ func TestEZCryptSignVerify(t *testing.T) {
 
 func TestEZCryptSymEncryptDecrypt(t *testing.T) {
 	keystring := NewCS("XSALSA20:hlibDY}Ls{F!yG83!a#E$|Nd3?MQ@9G=Q{7PB(@O")
-	secretkey := NewSymmetricKey(keystring)
+	secretkey := NewSecretKey(keystring)
 
 	testData := "This is some encryption test data"
 	encryptedData, err := secretkey.Encrypt([]byte(testData))
 	if err != nil || encryptedData == "" {
-		t.Fatal("SymmetricKey.Encrypt() failed")
+		t.Fatal("SecretKey.Encrypt() failed")
 	}
 
 	decryptedRaw, err := secretkey.Decrypt(encryptedData)
 	if err != nil || decryptedRaw == nil {
-		t.Fatal("SymmetricKey.Decrypt() failed")
+		t.Fatal("SecretKey.Decrypt() failed")
 	}
 
 	if string(decryptedRaw) != testData {
-		t.Fatal("SymmetricKey decrypted data mismatch")
+		t.Fatal("SecretKey decrypted data mismatch")
 	}
 
 }

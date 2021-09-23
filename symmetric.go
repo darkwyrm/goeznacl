@@ -9,15 +9,15 @@ import (
 	"golang.org/x/crypto/nacl/secretbox"
 )
 
-// SymmetricKey defines a symmetric encryption key
-type SymmetricKey struct {
+// SecretKey defines a symmetric encryption key
+type SecretKey struct {
 	Hash CryptoString
 	Key  CryptoString
 }
 
-// NewSymmetricKey creates a new NewSymmetricKey object from a CryptoString of the key
-func NewSymmetricKey(keyString CryptoString) *SymmetricKey {
-	var newkey SymmetricKey
+// NewSecretKey creates a new NewSecretKey object from a CryptoString of the key
+func NewSecretKey(keyString CryptoString) *SecretKey {
+	var newkey SecretKey
 
 	// All parameter validation is handled in Set
 	if newkey.Set(keyString) != nil {
@@ -27,9 +27,9 @@ func NewSymmetricKey(keyString CryptoString) *SymmetricKey {
 	return &newkey
 }
 
-// NewSymmetricKey creates a new SymmetricKey object
-func GenerateSymmetricKey() *SymmetricKey {
-	var newkey SymmetricKey
+// NewSecretKey creates a new SecretKey object
+func GenerateSecretKey() *SecretKey {
+	var newkey SecretKey
 
 	keyBytes := make([]byte, 32)
 	rand.Read(keyBytes)
@@ -47,17 +47,17 @@ func GenerateSymmetricKey() *SymmetricKey {
 }
 
 // GetEncryptionType returns the algorithm used by the key
-func (key SymmetricKey) GetEncryptionType() string {
+func (key SecretKey) GetEncryptionType() string {
 	return key.Key.Prefix
 }
 
 // GetType returns the type of key -- asymmetric or symmetric
-func (key SymmetricKey) GetType() string {
+func (key SecretKey) GetType() string {
 	return "symmetric"
 }
 
-// Set assigns a pair of CryptoString values to the SymmetricKey
-func (key *SymmetricKey) Set(keyString CryptoString) error {
+// Set assigns a pair of CryptoString values to the SecretKey
+func (key *SecretKey) Set(keyString CryptoString) error {
 
 	if keyString.Prefix != "XSALSA20" {
 		return errors.New("unsupported encryption algorithm")
@@ -71,7 +71,7 @@ func (key *SymmetricKey) Set(keyString CryptoString) error {
 
 // Encrypt encrypts byte slice using the internal key. It returns the resulting encrypted
 // data as a Base85-encoded string that amounts to a CryptoString without the prefix.
-func (key SymmetricKey) Encrypt(data []byte) (string, error) {
+func (key SecretKey) Encrypt(data []byte) (string, error) {
 	if data == nil {
 		return "", nil
 	}
@@ -95,7 +95,7 @@ func (key SymmetricKey) Encrypt(data []byte) (string, error) {
 }
 
 // Decrypt decrypts a string of encrypted data which is Base85 encoded using the internal key.
-func (key SymmetricKey) Decrypt(data string) ([]byte, error) {
+func (key SecretKey) Decrypt(data string) ([]byte, error) {
 	if data == "" {
 		return nil, nil
 	}

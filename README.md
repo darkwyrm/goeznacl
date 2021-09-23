@@ -20,7 +20,7 @@ import "crypto/rand"
 import "github.com/darkwyrm/goeznacl"
 
 
-func GenerateSymmetricKey() goeznacl.CryptoString {
+func GenerateSecretKey() goeznacl.CryptoString {
 	
 	keyBytes := make([]byte, 32)
 	rand.Read(keyBytes)
