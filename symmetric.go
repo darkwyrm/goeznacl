@@ -27,7 +27,7 @@ func NewSymmetricKey(keyString CryptoString) *SymmetricKey {
 	return &newkey
 }
 
-// NewSymmetricKey creates a new NewSymmetricKey object from a CryptoString of the key
+// NewSymmetricKey creates a new SymmetricKey object
 func GenerateSymmetricKey() *SymmetricKey {
 	var newkey SymmetricKey
 
