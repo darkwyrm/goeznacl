@@ -81,14 +81,19 @@ func (kpair *EncryptionPair) Set(pubkey CryptoString,
 }
 
 // Generate initializes the object to a new key pair
-func (kpair EncryptionPair) Generate() error {
+func GenerateEncryptionPair() (*EncryptionPair, error) {
 	pubkey, privkey, err := box.GenerateKey(rand.Reader)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return kpair.Set(NewCSFromBytes("CURVE25519", pubkey[:]),
-		NewCSFromBytes("CURVE25519", privkey[:]))
+	var out EncryptionPair
+	err = out.Set(NewCSFromBytes("CURVE25519", pubkey[:]), NewCSFromBytes("CURVE25519", privkey[:]))
+	if err != nil {
+		return nil, err
+	}
+
+	return &out, nil
 }
 
 // Encrypt encrypts byte slice using the internal public key. It returns the resulting encrypted
