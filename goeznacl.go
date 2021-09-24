@@ -32,7 +32,7 @@ type CryptoKey interface {
 	GetType() string
 }
 
-// EncryptionPair defines an asymmetric encryption EncryptionPair
+// EncryptionPair defines a pair of asymmetric encryption keys
 type EncryptionPair struct {
 	PublicHash  CryptoString
 	PrivateHash CryptoString
@@ -80,7 +80,7 @@ func (kpair *EncryptionPair) Set(pubkey CryptoString,
 	return nil
 }
 
-// Generate initializes the object to a new key pair
+// Generate creates a new EncryptionPair instance with a brand new set of keys
 func GenerateEncryptionPair() (*EncryptionPair, error) {
 	pubkey, privkey, err := box.GenerateKey(rand.Reader)
 	if err != nil {
@@ -96,7 +96,7 @@ func GenerateEncryptionPair() (*EncryptionPair, error) {
 	return &out, nil
 }
 
-// Encrypt encrypts byte slice using the internal public key. It returns the resulting encrypted
+// Encrypt encrypts a byte slice using the internal public key. It returns the resulting encrypted
 // data as a Base85-encoded string that amounts to a CryptoString without the prefix.
 func (kpair EncryptionPair) Encrypt(data []byte) (string, error) {
 	if data == nil {
@@ -159,7 +159,8 @@ func (kpair EncryptionPair) Decrypt(data string) ([]byte, error) {
 	return nil, ErrDecryptionFailure
 }
 
-// EncryptionKey defines an asymmetric encryption EncryptionPair
+// EncryptionKey is like EncryptionPair, but is just used for encryption and is equivalent to just
+// the public key
 type EncryptionKey struct {
 	PublicHash CryptoString
 	PublicKey  CryptoString
@@ -187,7 +188,7 @@ func (ekey EncryptionKey) GetType() string {
 	return "asymmetric"
 }
 
-// Set assigns a pair of CryptoString values to the EncryptionKey
+// Set assigns a CryptoString to the instance
 func (ekey *EncryptionKey) Set(pubkey CryptoString) error {
 
 	if pubkey.Prefix != "CURVE25519" {
@@ -201,7 +202,7 @@ func (ekey *EncryptionKey) Set(pubkey CryptoString) error {
 	return nil
 }
 
-// Encrypt encrypts byte slice using the internal public key. It returns the resulting encrypted
+// Encrypt encrypts a byte slice using the internal public key. It returns the resulting encrypted
 // data as a Base85-encoded string that amounts to a CryptoString without the prefix.
 func (ekey EncryptionKey) Encrypt(data []byte) (string, error) {
 	if data == nil {
