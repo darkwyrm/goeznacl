@@ -27,7 +27,8 @@ func NewSecretKey(keyString CryptoString) *SecretKey {
 	return &newkey
 }
 
-// NewSecretKey creates a new SecretKey object
+// GenerateSecretKey creates a new SecretKey object with a randomly-generated key using a
+// cryptographically safe method
 func GenerateSecretKey() *SecretKey {
 	var newkey SecretKey
 
@@ -56,7 +57,7 @@ func (key SecretKey) GetType() string {
 	return "symmetric"
 }
 
-// Set assigns a pair of CryptoString values to the SecretKey
+// Set assigns a CryptoString value to the SecretKey
 func (key *SecretKey) Set(keyString CryptoString) error {
 
 	if keyString.Prefix != "XSALSA20" {
@@ -69,7 +70,7 @@ func (key *SecretKey) Set(keyString CryptoString) error {
 	return nil
 }
 
-// Encrypt encrypts byte slice using the internal key. It returns the resulting encrypted
+// Encrypt encrypts a byte slice using the internal key. It returns the resulting encrypted
 // data as a Base85-encoded string that amounts to a CryptoString without the prefix.
 func (key SecretKey) Encrypt(data []byte) (string, error) {
 	if data == nil {
