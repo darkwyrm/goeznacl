@@ -120,14 +120,20 @@ func (spair *SigningPair) Set(pubkey CryptoString,
 	return nil
 }
 
-// Generate initializes the object to a new key pair
-func (spair SigningPair) Generate() error {
+// GenerateSigningPair creates a new instance with a randomly-generated key pair
+func GenerateSigningPair() (*SigningPair, error) {
 	verkey, signkey, err := ed25519.GenerateKey(rand.Reader)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return spair.Set(NewCSFromBytes("ED25519", verkey[:]),
-		NewCSFromBytes("ED25519", signkey.Seed()))
+
+	var out SigningPair
+	err = out.Set(NewCSFromBytes("ED25519", verkey[:]), NewCSFromBytes("ED25519", signkey.Seed()))
+	if err != nil {
+		return nil, err
+	}
+
+	return &out, nil
 }
 
 // Sign cryptographically signs a byte slice.
